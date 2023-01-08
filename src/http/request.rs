@@ -5,31 +5,16 @@ use std::convert::TryFrom;
 use std::error::Error;
 use std::fmt::{Result as FmtResult, Display, Formatter, Debug};
 
-pub struct Request {
-    path: &str,
-    query_string: Option<&str>,
+pub struct Request<'buf> {
+    path: &'buf str,
+    query_string: Option<&'buf str>,
     method: Method,
 }
 
-// impl Request {
-//     fn from_byte_array(buf: &[u8]) -> Result<Self, String> {
-//         unimplemented!();
-//     }
-// }
-
-impl TryFrom<&[u8]> for Request {
+impl<'buf> TryFrom<&'buf [u8]> for Request<'buf> {
     type Error = ParseError;
 
-    fn try_from(buf: &[u8]) -> Result<Self, Self::Error> {
-
-        // Return either correct error or the contents of the string slice
-        // match str::from_utf8(buf).or(Err(ParseError::InvalidEncoding)) {
-        //     Ok(request) => {},
-        //     Err(e) => return Err(e),
-        // }
-
-        // ? Operator acts as a match function and return either error or value in result
-        // let request = str::from_utf8(buf).or(Err(ParseError::InvalidEncoding))?;
+    fn try_from(buf: &'buf [u8]) -> Result<Request<'buf>, Self::Error> {
 
         let request = str::from_utf8(buf)?;
 
@@ -51,7 +36,7 @@ impl TryFrom<&[u8]> for Request {
         }
 
         Ok(Self {
-            path: path,
+            path,
             query_string,
             method
         })
