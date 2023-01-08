@@ -1,3 +1,6 @@
+// Silence compiler warnings for dead code
+#![allow(dead_code)]
+
 use http::Method;
 use http::Request;
 use server::Server;
